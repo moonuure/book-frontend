@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const BookForm = ({ onBookAdded }) => {
   const [book, setBook] = useState({
     title: "",
@@ -26,7 +28,7 @@ const BookForm = ({ onBookAdded }) => {
     }
 
     try {
-      await axios.post("http://localhost:3000/book", book);
+      await axios.post(`${API_URL}/book`, book);
       toast.success("✅ Book added successfully!");
       setBook({
         title: "",

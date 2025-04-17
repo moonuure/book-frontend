@@ -3,6 +3,8 @@ import axios from "axios";
 import EditBookModal from "./EditBookModal";
 import { toast } from "react-toastify";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
@@ -11,14 +13,14 @@ const BookList = () => {
   const booksPerPage = 6;
 
   const fetchBooks = async () => {
-    const res = await axios.get("http://localhost:3000/book");
+    const res = await axios.get(`${API_URL}/book`);
     setBooks(res.data);
   };
 
   const deleteBook = async (id) => {
     if (window.confirm("🗑️ Are you sure you want to delete this book?")) {
       try {
-        await axios.delete(`http://localhost:3000/book/${id}`);
+        await axios.delete(`${API_URL}/book/${id}`);
         toast.success("✅ Book deleted successfully!");
         fetchBooks();
       } catch (error) {
@@ -31,7 +33,6 @@ const BookList = () => {
     fetchBooks();
   }, []);
 
-  // Filter books based on search input
   const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -39,12 +40,10 @@ const BookList = () => {
       book.language.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination logic
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;
   const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
   const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
@@ -57,7 +56,7 @@ const BookList = () => {
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            setCurrentPage(1); // reset to first page on search
+            setCurrentPage(1);
           }}
         />
       </div>
@@ -105,7 +104,6 @@ const BookList = () => {
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <nav>
           <ul className="pagination justify-content-center mt-4">
@@ -143,7 +141,6 @@ const BookList = () => {
         </nav>
       )}
 
-      {/* Edit Modal */}
       {selectedBook && (
         <EditBookModal
           book={selectedBook}
