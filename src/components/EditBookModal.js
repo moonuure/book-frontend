@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// ✅ Use your .env API variable
+const API_URL = process.env.REACT_APP_API_URL;
+
 const EditBookModal = ({ book, onUpdate, onClose }) => {
   const [updatedBook, setUpdatedBook] = useState(book || {});
 
@@ -16,10 +19,7 @@ const EditBookModal = ({ book, onUpdate, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(
-        `http://localhost:3000/book/${updatedBook._id}`,
-        updatedBook
-      );
+      await axios.put(`${API_URL}/book/${updatedBook._id}`, updatedBook);
       toast.success("✅ Book updated successfully!");
       onUpdate();
       onClose();
@@ -59,7 +59,9 @@ const EditBookModal = ({ book, onUpdate, onClose }) => {
                 "pages",
               ].map((field, index) => (
                 <div className="col-md-6" key={index}>
-                  <label className="form-label">{field}</label>
+                  <label className="form-label">
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                  </label>
                   <input
                     className="form-control"
                     type={

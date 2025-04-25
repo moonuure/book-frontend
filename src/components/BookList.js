@@ -3,8 +3,6 @@ import axios from "axios";
 import EditBookModal from "./EditBookModal";
 import { toast } from "react-toastify";
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
@@ -12,15 +10,17 @@ const BookList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const booksPerPage = 6;
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const fetchBooks = async () => {
-    const res = await axios.get(`${API_URL}/book`);
+    const res = await axios.get(`${API_URL}/book`); // GET all books
     setBooks(res.data);
   };
 
   const deleteBook = async (id) => {
     if (window.confirm("🗑️ Are you sure you want to delete this book?")) {
       try {
-        await axios.delete(`${API_URL}/book/${id}`);
+        await axios.delete(`${API_URL}/book/${id}`); // DELETE a book
         toast.success("✅ Book deleted successfully!");
         fetchBooks();
       } catch (error) {
